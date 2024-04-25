@@ -46,3 +46,31 @@ pub struct InitUser<'info> {
     pub system_program: Program<'info,System>
 }
 
+#[derive(Accounts)]
+#[instruction(title: String, content: String)]
+pub struct CreatePost<'info> {
+    #[account(
+        init,
+        seeds = [POST_SEED, authority.key().as_ref(), &[user_account.last_post_id as u8].as_ref()],
+        bump,
+        payer = authority,
+        space = 8 + 32 + 32 + 4 + title.len() + 4 + content.len() + 1,
+    )]
+    pub post_account: Account<'info, PostAccount>,
+    
+    #[account(
+        mut,
+        seeds = [USER_SEED, authority.key().as_ref()],
+        bump,
+        has_one = authority,
+    )]
+    pub user_account: Account<'info, UserAccount>,
+
+    #[account(
+        mut
+    )]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>
+}
+
+
