@@ -55,6 +55,16 @@ mod blog_app {
         post_account.authority = authority.key();
         Ok(())
     }
+
+    pub fn update_post(ctx: Context<UpdatePost>, title: String, content: String) -> Result<()> {
+
+        let post_account = &mut ctx.accounts.post_account;
+
+        post_account.title = title;
+        post_account.content = content;
+
+        Ok(())
+    }
 }
 
 #[derive(Accounts)]
@@ -124,6 +134,33 @@ pub struct CreatePost<'info> {
     
     #[account(
         mut,
+        seeds = [USER_SEED, authority.key().as_ref()],
+        bump,
+        has_one = authority,
+    )]
+    pub user_account: Account<'info, UserAccount>,
+
+    #[account(
+        mut
+    )]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>
+}
+
+#[derive(Accounts)]
+#[instruction(title: String, content: String)]
+pub struct UpdatePost<'info> {
+    #[account(
+        mut,
+        seeds = [POST_SEED, authority.key().as_ref(), &[user_account.last_post_id as u8].as_ref()],
+        bump,
+        realloc = 8 + 32 + 32 + 4 + title.len() + 4 + content.len() + 1,
+        realloc::payer = authority,
+        realloc::zero = true,
+    )]
+    pub post_account: Account<'info, PostAccount>,
+
+    #[account(
         seeds = [USER_SEED, authority.key().as_ref()],
         bump,
         has_one = authority,
