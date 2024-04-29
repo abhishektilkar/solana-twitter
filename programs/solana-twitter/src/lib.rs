@@ -40,7 +40,7 @@ mod blog_app {
         Ok(())
     }
 
-    pub fn crate_post(ctx: Context<CreatePost>, title: String, content: String) -> Result<()> {
+    pub fn create_post(ctx: Context<CreatePost>, title: String, content: String) -> Result<()> {
 
         let post_account = &mut ctx.accounts.post_account;
         let user_account = &mut ctx.accounts.user_account;
@@ -65,6 +65,14 @@ mod blog_app {
 
         Ok(())
     }
+
+    pub fn delete_post(ctx: Context<DeletePost>, post_id: String) -> Result<()> {
+        let post_account = &mut ctx.accounts.post_account;
+
+        msg!("Deleting a Post account {} {}", post_account.title, post_id);
+        Ok(())
+    }
+
 }
 
 #[derive(Accounts)]
@@ -173,5 +181,25 @@ pub struct UpdatePost<'info> {
     pub authority: Signer<'info>,
     pub system_program: Program<'info, System>
 }
+
+
+#[derive(Accounts)]
+#[instruction(post_id: u8)]
+pub struct DeletePost<'info> {
+    #[account(
+        mut,
+        seeds = [POST_SEED, authority.key().as_ref(), &[post_id-1 as u8].as_ref()],
+        bump,
+        close = authority,
+    )]
+    pub post_account: Account<'info, PostAccount>,
+
+    #[account(mut)]
+    pub authority: Signer<'info>,
+    pub system_program: Program<'info, System>
+}
+
+
+
 
 
