@@ -2,7 +2,7 @@
 
 It's deployed on devnet, program address is mentioned in the lib.rs file if you want to test it out you are welcome, thanks.
 
-# Some Pictures for your refrence.
+### Some Pictures for your refrence.
 
 ![Screenshot 2024-04-25 235044](https://github.com/abhishektilkar/solana-twitter/assets/84792257/fdcfaacb-332e-434c-9936-515bc3c98d6f)
 
