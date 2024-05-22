@@ -1,6 +1,6 @@
 # Solana-twitter
 
-It's deployed on devnet, program address is mentioned in the lib.rs file if you want to test it out you are welcome, thanks.
+ It's deployed on devnet, program address is mentioned in the lib.rs file if you want to test it out you are welcome, thanks.
 
 ## Some Pictures for your refrence.
 
